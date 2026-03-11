@@ -1,4 +1,5 @@
 local console = require("../src/params")
+local simple = require("simple.assert")
 
 local err, params = console.parse_params("iii")
 assert(err == nil)
@@ -29,8 +30,8 @@ assert(params[2].type == "s")
 assert(params[2].optional == false)
 
 -- -- TODO: spaces
--- err, params = console.parse_params("i[seconds] s[name]")
--- assert(err == nil)
+err, params = console.parse_params("i[seconds] s[name]")
+simple.assert_eq(nil, err)
 -- assert(params[1].name == "seconds")
 -- assert(params[1].type == "i")
 -- assert(params[1].optional == false)

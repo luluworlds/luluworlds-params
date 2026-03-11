@@ -1,6 +1,6 @@
 package = "luluworlds-params"
 rockspec_format = "3.0"
-version = "scm-0"
+version = "1.0-2"
 source = {
   url = "git+https://github.com/luluworlds/luluworlds-params.git",
   branch = "master"

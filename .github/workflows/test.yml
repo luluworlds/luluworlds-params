@@ -52,5 +52,5 @@ jobs:
 
     - name: Run tests
       run: |
-        lua ./spec/*.lua
+        luarocks test
 
