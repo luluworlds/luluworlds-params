@@ -7,8 +7,20 @@
 ---into a lua table representing the individual parameters.
 ---It does NOT parse user given arguments. Only the expected parameter text.
 ---
+---Usage:
+---```lua
+---local err, params = console.parse_params("i[client id]?s[name]")
+---if err == nil then
+---	print(params[1].name) -- => client id
+---	print(params[1].type) -- => i
+---
+---	print(params[2].optional) -- => true
+---end
+---```
+---
 ---@param params string # teeworlds console params text like "i[client_id]"
----@return string|nil, ParsedParam[] # error msg or nil followed by list of parsed params
+---@return string|nil error either the error message as string or nil on success
+---@return ParsedParam[] params error msg or nil followed by list of parsed params
 local function parse_params(params)
    ---@type ParsedParam[]
    local pparams = {}
