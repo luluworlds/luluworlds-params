@@ -34,13 +34,18 @@ local function parse_params(params)
    ---@type boolean
    local current_optional = false
 
-   -- TODO: error if optional is followed by non optional
+   ---@type boolean
+   local expect_optional = false
 
    for i = 1, #params do
       local c = params:sub(i,i)
-      local last = params:sub(i+1,i+1) == ""
+      local next_c = params:sub(i+1,i+1)
+      local last = next_c == ""
       if current_name then
          if c == "]" then
+            if expect_optional == true and current_optional == false then
+               return "optional can not be followed by non optional", {}
+            end
             table.insert(pparams, {
                name = current_name,
                type = current_type,
@@ -49,6 +54,8 @@ local function parse_params(params)
             current_name = false
             current_type = false
             current_optional = false
+         elseif c == "[" then
+            return "unexpected [", {}
          else
             current_name = current_name .. c
          end
@@ -56,8 +63,12 @@ local function parse_params(params)
          current_name = ""
       elseif c == "?" then
          current_optional = true
-      elseif (c == "i") or (c == "s") then
+         expect_optional = true
+      elseif (c == "i") or (c == "s") or (c == "r") then
          if current_type then
+            if expect_optional == true and current_optional == false then
+               return "optional can not be followed by non optional", {}
+            end
             table.insert(pparams, {
                name = current_name,
                type = current_type,
@@ -70,7 +81,10 @@ local function parse_params(params)
          -- only flush prev type and queue next
          -- unless its end of string then we flush both
          current_type = c
-         if last then
+         if last or next_c == "?" then
+            if expect_optional == true and current_optional == false then
+               return "optional can not be followed by non optional", {}
+            end
             table.insert(pparams, {
                name = current_name,
                type = current_type,
@@ -80,6 +94,8 @@ local function parse_params(params)
             current_type = false
             current_optional = false
          end
+      elseif c == " " then
+         -- skip spaces
       else
          return "unsupported parameter type '" .. c .. "'", {}
       end
