@@ -48,11 +48,9 @@ jobs:
     - name: Install (nix)
       if: contains(matrix.os, 'macOS') || contains(matrix.os, 'ubuntu')
       run: |
-          luarocks config local_by_default true
-          luarocks install luluworlds-params-scm-0.rockspec
+          sudo luarocks install luluworlds-params-scm-0.rockspec
 
     - name: Run tests
       run: |
-        luarocks config local_by_default true
-        luarocks test
+        sudo luarocks test
 
